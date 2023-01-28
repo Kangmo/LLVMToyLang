@@ -3,7 +3,6 @@ if(NOT MLIR_ENABLE_EXECUTION_ENGINE)
   return()
 endif()
 
-
 # For a better template to copy, see examples/standalone
 include_directories(include)
 add_subdirectory(include)
@@ -17,9 +16,9 @@ set(LLVM_LINK_COMPONENTS
 
 set(LLVM_TARGET_DEFINITIONS mlir/ToyCombine.td)
 mlir_tablegen(ToyCombine.inc -gen-rewriters)
-add_public_tablegen_target(ToyCh6CombineIncGen)
+add_public_tablegen_target(ToyCh7CombineIncGen)
 
-add_toy_chapter(toyc-ch6
+add_toy_chapter(toyc-ch7
   toyc.cpp
   parser/AST.cpp
   mlir/MLIRGen.cpp
@@ -30,16 +29,16 @@ add_toy_chapter(toyc-ch6
   mlir/ToyCombine.cpp
 
   DEPENDS
-  ToyCh6ShapeInferenceInterfaceIncGen
-  ToyCh6OpsIncGen
-  ToyCh6CombineIncGen
+  ToyCh7ShapeInferenceInterfaceIncGen
+  ToyCh7OpsIncGen
+  ToyCh7CombineIncGen
   )
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include/)
 get_property(dialect_libs GLOBAL PROPERTY MLIR_DIALECT_LIBS)
 get_property(conversion_libs GLOBAL PROPERTY MLIR_CONVERSION_LIBS)
-target_link_libraries(toyc-ch6
+target_link_libraries(toyc-ch7
   PRIVATE
     ${dialect_libs}
     ${conversion_libs}
@@ -49,13 +48,11 @@ target_link_libraries(toyc-ch6
     MLIRExecutionEngine
     MLIRIR
     MLIRLLVMCommonConversion
-    MLIRLLVMDialect
     MLIRLLVMToLLVMIRTranslation
     MLIRMemRefDialect
     MLIRParser
     MLIRPass
     MLIRSideEffectInterfaces
-    MLIRSupport
     MLIRTargetLLVMIRExport
     MLIRTransforms
     )

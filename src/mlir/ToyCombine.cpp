@@ -23,6 +23,22 @@ namespace {
 #include "ToyCombine.inc"
 } // namespace
 
+/// Fold constants.
+OpFoldResult ConstantOp::fold(FoldAdaptor adaptor) { return getValue(); }
+
+/// Fold struct constants.
+OpFoldResult StructConstantOp::fold(FoldAdaptor adaptor) { return getValue(); }
+
+/// Fold simple struct access operations that access into a constant.
+OpFoldResult StructAccessOp::fold(FoldAdaptor adaptor) {
+  auto structAttr = adaptor.getInput().dyn_cast_or_null<mlir::ArrayAttr>();
+  if (!structAttr)
+    return nullptr;
+
+  size_t elementIndex = getIndex();
+  return structAttr[elementIndex];
+}
+
 /// This is an example of a c++ rewrite pattern for the TransposeOp. It
 /// optimizes the following scenario: transpose(transpose(x)) -> x
 struct SimplifyRedundantTranspose : public mlir::OpRewritePattern<TransposeOp> {
